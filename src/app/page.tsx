@@ -1,29 +1,50 @@
+'use client'
+
 import Tesseract from "@/components/Tesseract";
-import {CameraControls} from "@react-three/drei";
-import React from "react";
+import React, {useRef, useEffect} from "react";
+
+import { animate, splitText, stagger, createScope } from 'animejs';
 
 export default function Home() {
+
+  const root = useRef(null);
+  const scope = useRef(null);
+
+  useEffect(() => {
+
+    if (scope.current) {
+      // @ts-ignore
+      scope.current = createScope({ root }).add( self => {
+
+        const { chars } = splitText('p', {
+          chars: { wrap: 'clip' },
+        });
+
+        animate(chars, {
+          y: [
+            { to: ['-10%', '10%'] },
+            { to: '-10%', delay: 500, ease: 'in(3)' }
+          ],
+          duration: 1000,
+          ease: 'out(3)',
+          delay: stagger(50),
+          loop: true,
+        });
+      });
+
+      // @ts-ignore
+      return () => scope.current.revert()
+    }
+
+  }, []);
+
   return (
-    <div className="flex min-h-screen py-[30px] items-center flex-col bg-zinc-50 font-sans dark:bg-black">
-      <p className="max-w-md text-6xl leading-8 text-zinc-200 dark:text-zinc-400">
+    <div ref={root} className="flex overflow-visible min-h-screen py-[30px] items-center flex-col bg-zinc-50 font-sans dark:bg-black">
+      <p className="max-w-md text-6xl text-zinc-200 dark:text-zinc-400">
         Tesseract
       </p>
       <Tesseract/>
     </div>
   );
 }
-
-
-
-
-// 'use client'
-//
-// import React from "react";
-// import { Canvas } from '@react-three/fiber';
-// import { AsciiRenderer } from "@react-three/drei";
-// import { CameraControls } from "@react-three/drei";
-// import { CameraControlsImpl } from "@react-three/drei";
-// import { Segment } from "@react-three/drei";
-// import { Segments } from "@react-three/drei";
-// import * as THREE from "three";
 
