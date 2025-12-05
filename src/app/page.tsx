@@ -12,9 +12,8 @@ export default function Home() {
 
   useEffect(() => {
 
-    if (scope.current) {
-      // @ts-ignore
-      scope.current = createScope({ root }).add( self => {
+    // @ts-ignore
+    scope.current = createScope({ root }).add( self => {
 
         const { chars } = splitText('p', {
           chars: { wrap: 'clip' },
@@ -32,9 +31,8 @@ export default function Home() {
         });
       });
 
-      // @ts-ignore
-      return () => scope.current.revert()
-    }
+    // @ts-ignore
+    return () => scope.current.revert()
 
   }, []);
 
